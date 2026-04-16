@@ -10,6 +10,7 @@ import {
     Home,
     Image as ImageIcon,
     Link2,
+    LogOut,
     Menu,
     MonitorPlay,
     Newspaper,
@@ -23,6 +24,7 @@ import {
     HeartPulse,
     Globe,
 } from 'lucide-react';
+import { useAuthStore } from '@/stores/authStore';
 
 const navItems = [
     { href: '/', label: 'Home', icon: Home },
@@ -48,6 +50,7 @@ export default function Navbar() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const profileMenuRef = useRef<HTMLDivElement>(null);
     const sidebarRef = useRef<HTMLDivElement>(null);
+    const { isAuthenticated, user, logout } = useAuthStore();
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -215,82 +218,98 @@ export default function Navbar() {
 
                             {isProfileOpen ? (
                                 <div className="absolute right-0 top-[calc(100%+10px)] w-[260px] overflow-hidden rounded-sm border border-white/10 bg-[#0b1f4f] text-white shadow-2xl">
-                                    <button
-                                        type="button"
-                                        className="flex w-full items-center gap-3 border-b border-white/10 px-3 py-3 text-left transition hover:bg-white/5"
-                                    >
-                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ffdb9f] via-[#b55d62] to-[#4e2d54] text-sm font-semibold text-white">
-                                            A
+                                    {isAuthenticated && user ? (
+                                        /* ── LOGGED IN ──────────────────── */
+                                        <>
+                                            {/* Account header */}
+                                            <button
+                                                type="button"
+                                                className="flex w-full items-center gap-3 border-b border-white/10 px-3 py-3 text-left transition hover:bg-white/5"
+                                            >
+                                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ffdb9f] via-[#b55d62] to-[#4e2d54] text-sm font-semibold text-white">
+                                                    {user.initial}
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <div className="truncate text-sm font-medium">{user.phone}</div>
+                                                    <div className="text-xs text-white/70">Xem thông tin tài khoản</div>
+                                                </div>
+                                            </button>
+
+                                            {/* Menu items */}
+                                            <div className="py-1">
+                                                <button type="button" className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition hover:bg-white/5">
+                                                    <Bell className="h-4 w-4 shrink-0" />
+                                                    <span>Thông báo</span>
+                                                </button>
+                                                <button type="button" className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition hover:bg-white/5">
+                                                    <Link2 className="h-4 w-4 shrink-0" />
+                                                    <span>Liên kết tài khoản</span>
+                                                </button>
+                                                <button type="button" className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition hover:bg-white/5">
+                                                    <Package2 className="h-4 w-4 shrink-0" />
+                                                    <span>Gói cước</span>
+                                                </button>
+                                            </div>
+
+                                            {/* Library accordion */}
+                                            <div className="border-t border-white/10">
+                                                <button
+                                                    type="button"
+                                                    aria-expanded={isLibraryOpen}
+                                                    onClick={() => setIsLibraryOpen((open) => !open)}
+                                                    className="flex w-full items-center justify-between bg-white/10 px-4 py-2.5 text-left text-sm font-medium"
+                                                >
+                                                    <span className="flex items-center gap-3">
+                                                        <FolderClosed className="h-4 w-4 shrink-0" />
+                                                        <span>Thư viện</span>
+                                                    </span>
+                                                    {isLibraryOpen ? <ChevronUp className="h-4 w-4 shrink-0" /> : <ChevronDown className="h-4 w-4 shrink-0" />}
+                                                </button>
+                                                {isLibraryOpen && (
+                                                    <div className="bg-white/[0.08] py-1">
+                                                        {libraryItems.map((item) => (
+                                                            <button key={item} type="button" className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-white/75 transition hover:bg-white/5 hover:text-white">
+                                                                <span className="ml-1 h-1 w-1 shrink-0 bg-white/70" />
+                                                                <span>{item}</span>
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Logout */}
+                                            <div className="border-t border-white/10">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => { logout(); setIsProfileOpen(false); }}
+                                                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-red-400 transition hover:bg-white/5 hover:text-red-300"
+                                                >
+                                                    <LogOut className="h-4 w-4 shrink-0" />
+                                                    <span>Đăng xuất</span>
+                                                </button>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        /* ── NOT LOGGED IN ──────────────── */
+                                        <div className="p-3 flex flex-col gap-2">
+                                            <Link
+                                                href="/login"
+                                                id="navbar-login-link"
+                                                onClick={() => setIsProfileOpen(false)}
+                                                className="flex w-full items-center justify-center gap-2 bg-[#D42B2B] py-2.5 text-sm font-semibold text-white transition hover:bg-[#b82424] active:scale-[0.98]"
+                                            >
+                                                Đăng nhập
+                                            </Link>
+                                            <Link
+                                                href="/register"
+                                                id="navbar-register-link"
+                                                onClick={() => setIsProfileOpen(false)}
+                                                className="flex w-full items-center justify-center gap-2 border border-white/30 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10 active:scale-[0.98]"
+                                            >
+                                                Đăng ký
+                                            </Link>
                                         </div>
-                                        <div className="min-w-0">
-                                            <div className="truncate text-sm font-medium">
-                                                09047965506
-                                            </div>
-                                            <div className="text-xs text-white/70">
-                                                {'Xem thông tin tài khoản'}
-                                            </div>
-                                        </div>
-                                    </button>
-
-                                    <div className="py-1">
-                                        <button
-                                            type="button"
-                                            className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition hover:bg-white/5"
-                                        >
-                                            <Bell className="h-4 w-4 shrink-0" />
-                                            <span>{'Thông báo'}</span>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition hover:bg-white/5"
-                                        >
-                                            <Link2 className="h-4 w-4 shrink-0" />
-                                            <span>{'Liên kết tài khoản'}</span>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition hover:bg-white/5"
-                                        >
-                                            <Package2 className="h-4 w-4 shrink-0" />
-                                            <span>{'Gói cước'}</span>
-                                        </button>
-                                    </div>
-
-                                    <div className="border-t border-white/10">
-                                        <button
-                                            type="button"
-                                            aria-expanded={isLibraryOpen}
-                                            onClick={() =>
-                                                setIsLibraryOpen((open) => !open)
-                                            }
-                                            className="flex w-full items-center justify-between bg-white/10 px-4 py-2.5 text-left text-sm font-medium"
-                                        >
-                                            <span className="flex items-center gap-3">
-                                                <FolderClosed className="h-4 w-4 shrink-0" />
-                                                <span>{'Thư viện'}</span>
-                                            </span>
-                                            {isLibraryOpen ? (
-                                                <ChevronUp className="h-4 w-4 shrink-0" />
-                                            ) : (
-                                                <ChevronDown className="h-4 w-4 shrink-0" />
-                                            )}
-                                        </button>
-
-                                        {isLibraryOpen ? (
-                                            <div className="bg-white/[0.08] py-1">
-                                                {libraryItems.map((item) => (
-                                                    <button
-                                                        key={item}
-                                                        type="button"
-                                                        className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-white/75 transition hover:bg-white/5 hover:text-white"
-                                                    >
-                                                        <span className="ml-1 h-1 w-1 shrink-0 bg-white/70" />
-                                                        <span>{item}</span>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        ) : null}
-                                    </div>
+                                    )}
                                 </div>
                             ) : null}
                         </div>

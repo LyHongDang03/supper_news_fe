@@ -111,29 +111,6 @@ export default function Home() {
             imageUrl: getImage(i + 1),
           }))}
         />
-
-        {/* L3.1: SPORTME SECTION */}
-        <ScrollableNewsSection
-          title="SPORTME"
-          href="/sportme"
-          className="mb-16"
-          items={Array.from({ length: 12 }).map((_, i) => ({
-            title: getTitle(i + 8),
-            imageUrl: getImage(i + 2),
-          }))}
-        />
-
-        {/* L3.2: STARBOOM SECTION */}
-        <ScrollableNewsSection
-          title="STARBOOM"
-          href="/starboom"
-          className="mb-16"
-          items={Array.from({ length: 12 }).map((_, i) => ({
-            title: getTitle(i + 12),
-            imageUrl: getImage(i + 3),
-          }))}
-        />
-
         {/* L4: TẤT CẢ SECTION */}
         <section className="mb-16 bg-slate-50/50 -mx-4 px-4 py-8 border-t border-slate-100">
           <div className="max-w-[1440px] mx-auto">
