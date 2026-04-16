@@ -116,7 +116,7 @@ export default function Navbar() {
                     {/* Primary Nav Items for Mobile/Tablet */}
                     <div className="flex flex-col lg:hidden border-b border-white/10 pb-2 mb-2">
                         {navItems.map(({ href, label, icon: Icon }) => {
-                            const isActive = pathname === href || (label === 'MeNews' && ['/sportme', '/starboom', '/menews'].includes(pathname));
+                            const isActive = pathname === href || (label === 'MeNews' && ['/sportme', '/starboom', '/menews', '/menewsList'].includes(pathname));
                             return (
                                 <Link
                                     key={href}
@@ -318,7 +318,7 @@ export default function Navbar() {
 
                 <div className="mx-auto hidden lg:flex h-12 max-w-[1440px] items-center gap-6 overflow-x-auto px-4 no-scrollbar">
                     {navItems.map(({ href, label, icon: Icon }) => {
-                        const isActive = pathname === href || (label === 'MeNews' && ['/sportme', '/starboom', '/menews'].includes(pathname));
+                        const isActive = pathname === href || (label === 'MeNews' && ['/sportme', '/starboom', '/menews', '/menewsList'].includes(pathname));
 
                         return (
                             <Link

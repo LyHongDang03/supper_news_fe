@@ -37,7 +37,7 @@ const getImage = (i: number) =>
 
 export default function MeNewsPage() {
     const sections = [
-        { title: 'MeNews', href: '/menews' },
+        { title: 'MeNews', href: '/menewsList' },
         { title: 'Starboom', href: '/starboom' },
         { title: 'SportMe', href: '/sportme' },
     ];

@@ -1,4 +1,7 @@
-import { Search, X, Image as ImageIcon, Activity, HeartPulse, GraduationCap, Globe, Cpu } from "lucide-react";
+"use client";
+
+import { Search, X, Image as ImageIcon, Activity, HeartPulse, GraduationCap, Globe, Cpu, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import SearchBar from "@/components/ui/SearchBar";
 import NewsCardSquare from "@/components/ui/NewsCardSquare";
 import NewsCardHorizontal from "@/components/ui/NewsCardHorizontal";
@@ -7,6 +10,7 @@ import FilterPill from "@/components/ui/FilterPill";
 import Tag from "@/components/ui/Tag";
 import SectionHeader from "@/components/ui/SectionHeader";
 import ScrollableNewsSection from "@/components/sections/ScrollableNewsSection";
+import { useAuthStore } from "@/stores/authStore";
 
 // MOCK DATA
 const HEADLINES = [
@@ -32,6 +36,8 @@ const getImage = (i: number) => i % 2 === 0 ? "/images/dacnhantam.avif" : "/imag
 const SHORT_DESC = "Bản tin cập nhật những diễn biến mới nhất về tình hình kinh tế, chính trị và xã hội trong nước và quốc tế...";
 
 export default function Home() {
+  const { isAuthenticated } = useAuthStore();
+
   return (
     <div className="bg-white min-h-screen">
       <main className="max-w-[1440px] mx-auto px-4 py-8">
@@ -120,11 +126,15 @@ export default function Home() {
                 <NewsCardSquare key={i} title={getTitle(i + 10)} imageUrl={getImage(i)} />
               ))}
             </div>
-            <div className="mt-12 flex justify-center">
-              <button className="bg-[#cc444b] hover:bg-[#b03038] text-white px-8 py-3 rounded-sm font-bold shadow transition-colors flex items-center gap-2">
-                Đăng nhập để tiếp tục <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
+            {!isAuthenticated && (
+              <div className="mt-12 flex justify-center">
+                <Link href="/login">
+                  <button className="bg-[#cc444b] hover:bg-[#b03038] text-white px-8 py-3 rounded-sm font-bold shadow transition-colors flex items-center gap-2">
+                    Đăng nhập để tiếp tục <ChevronRight className="w-5 h-5" />
+                  </button>
+                </Link>
+              </div>
+            )}
           </div>
         </section>
 
@@ -183,6 +193,3 @@ export default function Home() {
     </div>
   );
 }
-
-// Temporary ChevronRight since it's not imported at the top for the "Đăng nhập để tiếp tục" button
-import { ChevronRight } from "lucide-react";
